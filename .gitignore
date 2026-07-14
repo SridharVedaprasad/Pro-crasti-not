@@ -1,0 +1,35 @@
+# Personal data — NEVER commit
+brain.md
+inbox.md
+*.mp3
+*.wav
+*.m4a
+
+# Secrets
+.env
+.env.local
+*.pem
+*.key
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Editor / OS junk
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# clasp
+.clasp.json.local
+.clasprc.json
+
+# Logs
+*.log
+logs/
+
+# Build artifacts
+dist/
+build/
