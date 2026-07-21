@@ -33,3 +33,4 @@ logs/
 # Build artifacts
 dist/
 build/
+deploy/.clasp.json
