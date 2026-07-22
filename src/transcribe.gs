@@ -159,8 +159,11 @@ function combineByteArrays(arrays) {
 }
 
 /**
- * Appends a timestamped transcript entry to inbox.md, under the
- * "Today's dump" section, matching the format from templates/inbox.template.md.
+ * Inserts a timestamped transcript entry at the TOP of inbox.md
+ * (reverse chronological), just below the header block.
+ * Header is everything up to and including the first '---' line.
+ * Everything in inbox.md is by definition unprocessed; processed
+ * entries get moved to archive.md by the reasoning layer, not here.
  */
 function appendTranscriptToInbox(fileName, transcript, timestamp) {
   const fileId = PropertiesService.getScriptProperties().getProperty('INBOX_FILE_ID');
@@ -170,7 +173,18 @@ function appendTranscriptToInbox(fileName, transcript, timestamp) {
   const entry = '\n## [' + ts + '] ' + fileName + '\n' + transcript.trim() + '\n';
 
   const existing = file.getBlob().getDataAsString();
-  file.setContent(existing + entry);
+  const delimiterIndex = existing.indexOf('\n---\n');
+
+  let updated;
+  if (delimiterIndex !== -1) {
+    const headerEnd = delimiterIndex + '\n---\n'.length;
+    updated = existing.slice(0, headerEnd) + entry + existing.slice(headerEnd);
+  } else {
+    // No header delimiter found — prepend entry at very top rather than lose it
+    updated = entry + '\n' + existing;
+  }
+
+  file.setContent(updated);
 }
 
 /**
