@@ -45,6 +45,14 @@ Use the Google Calendar MCP to list today's events (timezone Asia/Singapore, ful
 
 ## STEP 4 — Completion reconciliation (before inbox classification)
 
+**Date attribution (do this FIRST, before reconciling anything against the calendar):**
+Determine which DAY each completion report refers to, in this priority order:
+1. If the note explicitly names a day ("yesterday", "on Monday", a date) → use that.
+2. Else if dictated before 11:00am local → assume it reports on YESTERDAY (morning-after reflection).
+3. Else (dictated 11:00am or later) → assume it reports on TODAY.
+4. If still ambiguous → surface at the approval gate and ask Sridhar. Never silently guess.
+Use the resolved day as the `date` field in completions.jsonl, and reconcile against THAT day's calendar — not necessarily today's.
+
 Some inbox entries are COMPLETION REPORTS about what already happened — not new
 tasks, preferences, or patterns. Examples: "did the gym", "skipped the ETF
 check-in again", "PR still not started", "spent an hour reading to Vyom".
@@ -85,6 +93,19 @@ For EVERY inbox entry, assign exactly one category:
 - **pattern / observation** → a recurring behaviour or outcome worth remembering ("skipped gym 3 days running"). Proposed for brain.md Pattern Log.
 - **one-off reflection** → a thought with no action and no lasting rule. Archive it, do nothing else.
 
+The two categories below apply to NEW/forward items only, not completion reports (those are handled in Step 4):
+
+- **decision-blocked** → names an action, but doing it requires an unmade decision first ("book October flights" — blocked on price / destination / aligning with wife).
+  - Do NOT schedule the action — scheduling it guarantees the skip, since there's nothing to do yet.
+  - Surface the blocking decision(s) at the approval gate.
+  - Only schedule "make the decision" if it's an actionable SOLO decision. If it needs another person, it's a "raise with X" nudge, not a calendar task.
+  - Do NOT try to distinguish "genuinely blocked" from "avoidance dressed as blocked" via cleverness. NAME the assumption at the gate ("treating this as decision-blocked on destination — correct?") and let Sridhar confirm.
+- **needs-decomposition** → big, unbounded, no obvious first move, high activation energy ("PR application").
+  - Do NOT schedule a big scary block ("PR — 2 hours").
+  - Schedule ONLY "define the first small sub-task of X — 15 min."
+  - Sub-tasks, once defined, re-enter as normal inbox items later and get scheduled normally.
+  - Principle: for a big task, the system's job is to make STARTING cheap, not to allocate time to FINISHING.
+
 If an entry is genuinely ambiguous (could be a one-off task OR a durable preference), DO NOT guess. Flag it and ask Sridhar which it is. Record that you asked (this feeds the ambiguity_flag in the audit log).
 
 ## STEP 6 — Reason the schedule (no writes)
@@ -92,6 +113,7 @@ If an entry is genuinely ambiguous (could be a one-off task OR a durable prefere
 Build a proposed day plan. For each task/event:
 - Propose a specific time block.
 - Give a ONE-LINE reason grounded in brain.md ("gym 8:30am per M/W/F preference"; "PR paperwork in afternoon block — mornings are Dota, PR is focus work").
+- Ask the essentialism question: "given the goal is reclaiming time for what matters, does this earn a slot today, or is it a default/non-essential?" For now, only SURFACE this at the approval gate (e.g. "ETF — 3rd day scheduled, still worth it?"). NEVER auto-cut — full confront logic is a later build.
 - Respect fixed items already on the calendar and the phase's schedule shape.
 - Respect priorities: during sabbatical, protect the Pro-crasti-not project block; don't let low-value tasks eat the primary priority.
 - Protect Dota mornings (sabbatical) — do not guilt-schedule over them.
@@ -104,7 +126,9 @@ Show Sridhar, clearly:
 1. Today's date + phase.
 2. What's already on the calendar.
 3. The proposed schedule as a time-ordered table (time | item | reason).
-4. The classification of every inbox entry (task / preference / pattern / reflection).
+4. The classification of every inbox entry (task / preference / pattern / reflection / decision-blocked / needs-decomposition):
+   - For **decision-blocked** items: show the blocking decision(s), and whether a "make the decision" task is being proposed (or a "raise with X" nudge instead, if it needs another person).
+   - For **needs-decomposition** items: show the "define first sub-task" item being scheduled in place of the big block.
 5. **Completion reconciliation:**
    - Planned items reconciled: each with ✓ done / ◐ partial / ✗ skipped + reason.
    - Any item skipped 2+ days running — flag it explicitly (this is early
@@ -121,7 +145,7 @@ If Sridhar says adjust → revise and re-present Step 7. If cancel → stop, wri
 
 On explicit "yes" (or equivalent), do ALL of the following, and log EACH action to AUDIT:
 
-1. **Calendar:** create each approved event via the Google Calendar MCP. Timezone Asia/Singapore. After each create, append an audit line: `action_type: calendar_create`.
+1. **Calendar:** create each approved event via the Google Calendar MCP. Timezone Asia/Singapore. After each create, append an audit line: `action_type: calendar_create`. If the event came from a **decision-blocked** item (a solo "make the decision" task) or a **needs-decomposition** item (a "define first sub-task" block), say so explicitly in that audit line's `notes` field (e.g. "needs-decomposition: first sub-task of PR application") — reuse `action_type: calendar_create`, do not invent a new action_type.
 
 2. **brain.md:** for each approved preference/pattern, APPEND a new row to the correct log (Preference Log or Pattern Log). Append-only — never touch existing rows. Use the Edit tool, never sed. After the write, append an audit line: `action_type: brain_update`.
 
