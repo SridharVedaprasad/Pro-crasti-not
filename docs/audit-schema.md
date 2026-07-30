@@ -26,7 +26,7 @@ each time.
 | Field | Type | Values | Notes |
 |---|---|---|---|
 | `timestamp` | string | ISO 8601, Asia/Singapore offset | Always local time, never UTC-only — matches CLAUDE.md's date-handling rule. |
-| `action_type` | string | `inbox_transcribe`, `calendar_create`, `calendar_update`, `calendar_delete`, `brain_update`, `inbox_archive` | Extend this list as new action types appear — update this table when you do. |
+| `action_type` | string | `inbox_transcribe`, `calendar_create`, `calendar_update`, `calendar_delete`, `brain_update`, `inbox_archive`, `completion_log`, `food_log` | Extend this list as new action types appear — update this table when you do. |
 | `trust_tier` | string | `supervised` \| `autonomous` | `supervised` = human approved before execution. `autonomous` = agent acted without per-action approval, within a Week 3 trust-tier boundary. Everything is `supervised` until Week 3 defines the narrow autonomous slice. |
 | `trigger` | string | `voice_note`, `manual_prompt`, `scheduled` | What caused this action to happen. `scheduled` is reserved for proactive scheduling — cut from this project's scope (see PROJECT_BRIEF.md amendment), but the field stays in case it's revived later. |
 | `input_summary` | string | free text, short | What prompted the action. Not the full transcript/prompt — a summary. Keep it short enough that the log stays scannable. |
