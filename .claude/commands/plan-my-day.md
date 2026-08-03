@@ -5,7 +5,7 @@ description: Plan today from brain.md + inbox.md, propose a schedule reasoned fr
 # /plan-my-day
 
 You are planning Sridhar's day. Follow this sequence EXACTLY. Do not skip steps.
-Do not write anything until Sridhar explicitly approves (Step 8).
+Do not write anything until Sridhar explicitly approves (Step 9).
 
 ## Paths (all in Google Drive, synced locally, available offline)
 
@@ -108,40 +108,97 @@ The two categories below apply to NEW/forward items only, not completion reports
 
 If an entry is genuinely ambiguous (could be a one-off task OR a durable preference), DO NOT guess. Flag it and ask Sridhar which it is. Record that you asked (this feeds the ambiguity_flag in the audit log).
 
-## STEP 6 — Reason the schedule (no writes)
+## STEP 6 — Confront pass: surface repeat-skip patterns (no writes)
+
+This reads HISTORY, not just today. Read `completions.jsonl` in full.
+
+**Matching rule (v1 — deliberately exact, not fuzzy):**
+- Count skips by EXACT item title match across days.
+- Do NOT fuzzy/semantically group similar titles. Decomposition intentionally
+  produces DIFFERENT sub-task titles as real progress; fuzzy matching would
+  wrongly lump them as "same item skipped again" and punish the exact
+  decomposition behaviour this system encourages.
+- A "skip" = an entry with `kind:"planned"` AND `status:"skipped"`.
+- Threshold: 3 or more skips of the SAME exact item title.
+
+**Data-integrity rule — skipped vs never-scheduled:**
+- Only count entries that are `kind:"planned"` AND `status:"skipped"`.
+- Do NOT infer a skip from the ABSENCE of a completion entry. A missing entry
+  means the item was never scheduled or never reported on — NOT that it was
+  skipped. (The planner intermittently drops recurring anchors like dinner;
+  that's a separate known bug. Never treat a never-scheduled item as a skip.)
+- If an item's history is a mix of done and skipped, only the skipped count
+  toward the threshold, but MENTION the done count too (e.g. "skipped 3, done
+  1") so Sridhar sees the full picture, not a cherry-picked negative.
+
+**When an item hits 3+ skips, infer WHICH of three meanings applies, using the
+`reason` field.** Do NOT collapse these — collapsing is harmful (e.g.
+suggesting to "cut" medication):
+
+1. **NON-ESSENTIAL → propose CUT.** Signal: reasons like "no time", "didn't
+   get to it", "deprioritised", with no real consequence noted. Example: ETF
+   check-in. Gate wording: "X skipped 3x (reasons: ...). Looks non-essential.
+   Cut it, keep trying, or reschedule differently?"
+2. **MATTERS BUT APPROACH BROKEN → propose CHANGE THE MECHANISM, not cut.**
+   Signal: reasons like "forgot"; item is clearly important (health, meds).
+   Example: reflux pills. Gate wording: "X skipped 3x (reason: forgot). This
+   matters — the reminder approach isn't working. Options: stronger/
+   rescheduled reminder, habit-stack onto an existing anchor, or change the
+   time. NOT proposing to cut."
+3. **MATTERS BUT BLOCKED → route to decision-blocked / needs-decomposition.**
+   Signal: reasons like "not started", "no first move", or it's a big/
+   undecided item. Example: PR application. Gate wording: "X skipped 3x — not
+   started each time. This isn't a scheduling problem, it's a
+   [decision-blocked / needs-decomposition] problem. Want to surface the
+   blocking decision / define a first sub-task instead of re-scheduling the
+   same block?"
+
+If the reason signals are ambiguous, present the pattern and ASK which of the
+three it is — do not guess.
+
+**Hard safeguard:** Confront NEVER cuts, changes, or reschedules
+automatically. It only SURFACES the pattern + inferred category + proposed
+action at the gate (Step 8). Sridhar decides. If nothing hits the threshold,
+this pass produces nothing to show — no noise at the gate.
+
+## STEP 7 — Reason the schedule (no writes)
 
 Build a proposed day plan. For each task/event:
 - Propose a specific time block.
 - Give a ONE-LINE reason grounded in brain.md ("gym 8:30am per M/W/F preference"; "PR paperwork in afternoon block — mornings are Dota, PR is focus work").
-- Ask the essentialism question: "given the goal is reclaiming time for what matters, does this earn a slot today, or is it a default/non-essential?" For now, only SURFACE this at the approval gate (e.g. "ETF — 3rd day scheduled, still worth it?"). NEVER auto-cut — full confront logic is a later build.
+- Ask the essentialism question: "given the goal is reclaiming time for what matters, does this earn a slot today, or is it a default/non-essential?" Only SURFACE this at the approval gate (e.g. "ETF — 3rd day scheduled, still worth it?") — NEVER auto-cut. Items with 3+ exact-match skips are already handled by the Confront pass (Step 6); this question is for lighter, first/second-time essentialism doubts that don't yet meet that threshold.
 - Respect fixed items already on the calendar and the phase's schedule shape.
 - Respect priorities: during sabbatical, protect the Pro-crasti-not project block; don't let low-value tasks eat the primary priority.
 - Protect Dota mornings (sabbatical) — do not guilt-schedule over them.
 - Honour gym days/times, meal rules (no 7hr gaps), sleep window.
 - Leave buffer; do not overfill.
 
-## STEP 7 — Present the plan (STILL no writes)
+## STEP 8 — Present the plan (STILL no writes)
 
-Show Sridhar, clearly:
+Show Sridhar, clearly, in this order:
 1. Today's date + phase.
 2. What's already on the calendar.
-3. The proposed schedule as a time-ordered table (time | item | reason).
-4. The classification of every inbox entry (task / preference / pattern / reflection / decision-blocked / needs-decomposition):
+3. **Confront** (only if the Step 6 pass found anything — omit the section
+   entirely if nothing hit the threshold, no noise): for each item hitting 3+
+   exact-match skips, show the skip count (+ done count if mixed), the
+   reasons, the inferred category, and the proposed action.
+4. The proposed schedule as a time-ordered table (time | item | reason).
+5. The classification of every inbox entry (task / preference / pattern / reflection / decision-blocked / needs-decomposition):
    - For **decision-blocked** items: show the blocking decision(s), and whether a "make the decision" task is being proposed (or a "raise with X" nudge instead, if it needs another person).
    - For **needs-decomposition** items: show the "define first sub-task" item being scheduled in place of the big block.
-5. **Completion reconciliation:**
+6. **Completion reconciliation:**
    - Planned items reconciled: each with ✓ done / ◐ partial / ✗ skipped + reason.
-   - Any item skipped 2+ days running — flag it explicitly (this is early
-     essentialism signal; full "confront" logic comes later).
+   - Any item skipped 2+ days running (but under the Confront threshold of 3)
+     — flag it explicitly as an early essentialism signal.
    - Unplanned time-leakage captured: item + duration if known.
-6. Any ambiguous entries you need him to resolve — from inbox classification or completion reconciliation.
-7. Exactly what you will write to brain.md (the specific new log rows), what will move to archive.md, and what calendar events you'll create.
+7. Any ambiguous entries you need him to resolve — from inbox classification, completion reconciliation, or the Confront pass.
+8. Exactly what you will write to brain.md (the specific new log rows), what will move to archive.md, and what calendar events you'll create.
 
 Then STOP and ask: "Approve this plan? (yes / adjust / cancel)"
 
-## STEP 8 — Execute ONLY on explicit approval
+## STEP 9 — Execute ONLY on explicit approval
 
-If Sridhar says adjust → revise and re-present Step 7. If cancel → stop, write nothing.
+If Sridhar says adjust → revise and re-present Step 8. If cancel → stop, write nothing.
 
 On explicit "yes" (or equivalent), do ALL of the following, and log EACH action to AUDIT:
 
@@ -161,6 +218,12 @@ On explicit "yes" (or equivalent), do ALL of the following, and log EACH action 
 
 5. **inbox.md:** after archiving, inbox.md should contain only its header (and any entries Sridhar chose to leave unprocessed). Everything acted-on is gone from it.
 
+6. **Confront-driven actions:** Confront (Step 6) never acts on its own — it only proposed at the gate (Step 8). If Sridhar approved a Confront proposal:
+   - **Cut:** don't schedule the item going forward. Append a brain.md Pattern Log row recording the decision and why, so the history shows a deliberate cut, not a silent drop. Audit line: reuse `action_type: brain_update`.
+   - **Mechanism changed:** create/adjust the calendar event per the new mechanism. Audit line: reuse `action_type: calendar_create`.
+   - **Routed to decision-blocked / needs-decomposition:** handle per the normal Step 5 rules for that category (surface the blocking decision, or schedule only the "define first sub-task" block).
+   - In every case, put `"confront-driven"` + the item + the decision in that audit line's `notes` field. Do NOT invent a new `action_type` — reuse the existing ones above.
+
 ## Audit log format (append one JSON line per action to AUDIT)
 
 Match `docs/audit-schema.md`. Each line:
@@ -169,12 +232,12 @@ Match `docs/audit-schema.md`. Each line:
 {"timestamp":"<ISO8601 +08:00>","action_type":"calendar_create|brain_update|inbox_archive|completion_log","trust_tier":"supervised","trigger":"manual_prompt","input_summary":"<short>","output_summary":"<short>","outcome":"success","ambiguity_flag":<true|false>,"reversed_at":null,"notes":""}
 ```
 
-- `trust_tier` is always `supervised` for /plan-my-day (Sridhar approved every action in Step 8).
+- `trust_tier` is always `supervised` for /plan-my-day (Sridhar approved every action in Step 9).
 - `trigger` is `manual_prompt`.
 - `ambiguity_flag` is `true` for any action that came from an entry Sridhar had to disambiguate in Step 4 (completion reconciliation) or Step 5 (classification).
 - Use the real timestamp from `date`, Asia/Singapore offset.
 - Append lines; never rewrite audit.jsonl.
 
-## STEP 9 — Confirm
+## STEP 10 — Confirm
 
 Summarise what was written: N calendar events created, M brain.md rows added, K entries archived, and confirm audit lines were logged. Keep it short.
