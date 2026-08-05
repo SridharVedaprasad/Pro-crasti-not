@@ -92,3 +92,60 @@ Posture: this is an ASSERTION, not a musing. The authenticity in #1 and #5 earns
   proves a point about trust/personalization.
 - Don't hedge the close. A consulting-credibility piece that softens its central
   claim isn't credible.
+
+## ============================================================
+## HOOK — DRAFTED (react-to-able opening, 2 versions)
+## ============================================================
+
+### Structural decision: abstract hook, concrete reveal later
+- Open ABSTRACT (task described by its SHAPE, not its identity) so every reader
+  maps their own avoided task onto it — "I do that."
+- REVEAL the real, lightly-disguised task later (§2 or §3): e.g. "a residency
+  application that had sat open for months — real deadline, real consequences,
+  no clean first move." Lightly disguised, not fully anonymous (relatability).
+- Sequence: abstraction earns the recognition; specificity earns the trust.
+  Also gives the long Substack read a second beat of intimacy partway through.
+- DON'T FORGET: the hook sets up a debt the piece must pay off — surface the
+  concrete task in §2/§3, don't leave it abstract the whole way.
+
+### Version A — LinkedIn (punchy; NOTE: wants a punchier rework later)
+"I spent my sabbatical building an AI system to plan my days. Three weeks in, it
+told me something I'd been hiding from myself: there was a task — the kind
+everyone has one of, important and overdue and somehow never the thing you do
+today — that I hadn't touched in seven days. Not once. And every morning, without
+quite admitting why, I'd been renaming it on my list, a slightly different label
+each day, just different enough that I wouldn't notice it was the same thing I
+kept refusing to do.
+
+The system noticed. That was the moment I realized I'd built the wrong thing —
+and stumbled into something far more useful."
+
+[TODO later: make the LinkedIn open punchier — shorter first line, faster to the
+mirror. The above is the Substack-flavoured version; LinkedIn wants more snap.]
+
+### Version B — Substack (slower burn; thesis planted in beats 2-3)
+"I set out to build an AI system that would make me more productive on my
+sabbatical. It worked, in the narrow sense: my days filled with tidy, sensible
+calendar blocks. Gym at 8:30, project work after lunch, wind-down before bed.
+Everything in its place.
+
+And it changed almost nothing about what I actually got done.
+
+The system's most valuable act had nothing to do with scheduling. Three weeks in,
+it quietly pointed out that I'd avoided one task for seven straight days — the
+kind everyone has one of, important and overdue and never quite today's problem.
+And that I'd been renaming it each morning, a little differently each time, so I
+wouldn't have to notice I kept refusing to start. It was the one thing I least
+wanted to see, and the only thing worth seeing."
+
+Why B is the stronger consulting open: beats 2-3 ("it worked... and changed
+almost nothing") plant the whole "solving the wrong problem" thesis before it's
+ever named. The reader FEELS the gap between working and useful before you argue
+it. A spends the confession as entertainment; B spends it as evidence.
+
+### Anchor phrase (the concrete-but-universal bit)
+Chosen: "the kind everyone has one of, important and overdue and somehow never
+the thing you do today." "Everyone has one of" does the relatability work
+explicitly; "never the thing you do today" is the texture of avoidance with no
+specifics. Punchier fallback for LinkedIn: "important, overdue, and never quite
+today's problem."
