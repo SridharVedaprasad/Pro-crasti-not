@@ -5,7 +5,7 @@ description: Plan today from brain.md + inbox.md, propose a schedule reasoned fr
 # /plan-my-day
 
 You are planning Sridhar's day. Follow this sequence EXACTLY. Do not skip steps.
-Do not write anything until Sridhar explicitly approves (Step 9).
+Do not write anything until Sridhar explicitly approves (Step 10).
 
 ## Paths (all in Google Drive, synced locally, available offline)
 
@@ -158,10 +158,69 @@ three it is — do not guess.
 
 **Hard safeguard:** Confront NEVER cuts, changes, or reschedules
 automatically. It only SURFACES the pattern + inferred category + proposed
-action at the gate (Step 8). Sridhar decides. If nothing hits the threshold,
+action at the gate (Step 9). Sridhar decides. If nothing hits the threshold,
 this pass produces nothing to show — no noise at the gate.
 
-## STEP 7 — Reason the schedule (no writes)
+## STEP 7 — Carry-forward pass: surface unfinished one-off tasks (no writes)
+
+Fixes the "silently vanishes" gap: a skipped/partial one-off task, once its
+inbox entry is archived, currently disappears forever instead of resurfacing
+until done or explicitly dropped. This reads HISTORY, not just today — the
+same `completions.jsonl` Step 6 just read.
+
+**The rule:** find items where:
+- `kind:"planned"`, AND
+- the most recent status for that exact item title is `"skipped"` or
+  `"partial"`, AND
+- there is no later entry for that same exact title with status `"done"`.
+(i.e. attempted-and-not-finished, and never since completed.)
+
+**Exclude:**
+- Recurring anchors (dinner, gym, pills, wind-down, breakfast, lunch) — a
+  missed instance of a recurring anchor isn't an "unfinished task" to carry
+  forward. Treat anything that appears on most days, or is tagged as a daily
+  anchor in brain.md, as recurring.
+- Anything already re-scheduled on today's calendar (Step 3) — don't
+  double-surface.
+- Anything Sridhar has explicitly dropped — check brain.md's Pattern Log for a
+  logged "dropped" decision on that exact title before surfacing it.
+
+The remaining items are CARRY-FORWARD CANDIDATES: real one-off tasks that were
+started-or-skipped and never finished.
+
+**Exact-match consistency (same rule as Confront, same reasoning):** match by
+exact item title, not fuzzy — real decomposition produces genuinely different
+sub-task titles and must not be lumped. (Known shared limitation: cosmetic
+retitling evades exact-match here too — acceptable for v1; a future item_key
+fix would address both at once.)
+
+**Interaction with Confront (Step 6) — no double-handling:**
+- Carry-forward = "unfinished, surface it so it doesn't vanish" (fires on 1+ miss).
+- Confront = "repeatedly skipped, something's wrong, route it" (fires on 3+).
+- If an item qualifies for BOTH, Confront owns the recommendation.
+  Carry-forward just ensures it's visible and defers to Confront's routing —
+  at the gate, note "see Confront above" instead of proposing its own action.
+- One item, one recommendation at the gate — never two competing ones.
+
+**For each candidate Confront does NOT already own, propose:**
+- Item title, when it was last attempted, the skip/partial reason.
+- Reschedule it today, if it fits and Sridhar wants it.
+- Sridhar decides per item: reschedule / drop / leave for later.
+
+**The "dropped list" — so dropped items don't nag forever:** if Sridhar says
+"drop it" (now or in a prior session), the item must not keep re-surfacing
+every day. On a drop, Step 10 appends a brain.md Pattern Log row recording the
+deliberate drop + date + reason (if given) — a drop is a deliberate, recorded
+act, not a silent vanish.
+
+**Hard safeguard:** Carry-forward NEVER auto-reschedules or auto-drops. It
+only SURFACES the candidate + proposed action at the gate (Step 9). Sridhar
+decides. Never infer a skip/partial from an ABSENT completions entry — same
+data-integrity rule as Confront: a never-scheduled item is not an unfinished
+task. If nothing qualifies, this pass produces nothing to show — no noise at
+the gate.
+
+## STEP 8 — Reason the schedule (no writes)
 
 Build a proposed day plan. For each task/event:
 - Propose a specific time block.
@@ -173,7 +232,7 @@ Build a proposed day plan. For each task/event:
 - Honour gym days/times, meal rules (no 7hr gaps), sleep window.
 - Leave buffer; do not overfill.
 
-## STEP 8 — Present the plan (STILL no writes)
+## STEP 9 — Present the plan (STILL no writes)
 
 Show Sridhar, clearly, in this order:
 1. Today's date + phase.
@@ -182,23 +241,28 @@ Show Sridhar, clearly, in this order:
    entirely if nothing hit the threshold, no noise): for each item hitting 3+
    exact-match skips, show the skip count (+ done count if mixed), the
    reasons, the inferred category, and the proposed action.
-4. The proposed schedule as a time-ordered table (time | item | reason).
-5. The classification of every inbox entry (task / preference / pattern / reflection / decision-blocked / needs-decomposition):
+4. **Carried forward (unfinished)** (only if the Step 7 pass found anything —
+   omit the section entirely if none, no noise): for each carry-forward
+   candidate, show the item title, when it was last attempted, the
+   skip/partial reason, and the proposed action — reschedule today, or "see
+   Confront above" if Confront already owns it.
+5. The proposed schedule as a time-ordered table (time | item | reason).
+6. The classification of every inbox entry (task / preference / pattern / reflection / decision-blocked / needs-decomposition):
    - For **decision-blocked** items: show the blocking decision(s), and whether a "make the decision" task is being proposed (or a "raise with X" nudge instead, if it needs another person).
    - For **needs-decomposition** items: show the "define first sub-task" item being scheduled in place of the big block.
-6. **Completion reconciliation:**
+7. **Completion reconciliation:**
    - Planned items reconciled: each with ✓ done / ◐ partial / ✗ skipped + reason.
    - Any item skipped 2+ days running (but under the Confront threshold of 3)
      — flag it explicitly as an early essentialism signal.
    - Unplanned time-leakage captured: item + duration if known.
-7. Any ambiguous entries you need him to resolve — from inbox classification, completion reconciliation, or the Confront pass.
-8. Exactly what you will write to brain.md (the specific new log rows), what will move to archive.md, and what calendar events you'll create.
+8. Any ambiguous entries you need him to resolve — from inbox classification, completion reconciliation, the Confront pass, or the Carry-forward pass.
+9. Exactly what you will write to brain.md (the specific new log rows), what will move to archive.md, and what calendar events you'll create.
 
 Then STOP and ask: "Approve this plan? (yes / adjust / cancel)"
 
-## STEP 9 — Execute ONLY on explicit approval
+## STEP 10 — Execute ONLY on explicit approval
 
-If Sridhar says adjust → revise and re-present Step 8. If cancel → stop, write nothing.
+If Sridhar says adjust → revise and re-present Step 9. If cancel → stop, write nothing.
 
 On explicit "yes" (or equivalent), do ALL of the following, and log EACH action to AUDIT:
 
@@ -218,11 +282,17 @@ On explicit "yes" (or equivalent), do ALL of the following, and log EACH action 
 
 5. **inbox.md:** after archiving, inbox.md should contain only its header (and any entries Sridhar chose to leave unprocessed). Everything acted-on is gone from it.
 
-6. **Confront-driven actions:** Confront (Step 6) never acts on its own — it only proposed at the gate (Step 8). If Sridhar approved a Confront proposal:
+6. **Confront-driven actions:** Confront (Step 6) never acts on its own — it only proposed at the gate (Step 9). If Sridhar approved a Confront proposal:
    - **Cut:** don't schedule the item going forward. Append a brain.md Pattern Log row recording the decision and why, so the history shows a deliberate cut, not a silent drop. Audit line: reuse `action_type: brain_update`.
    - **Mechanism changed:** create/adjust the calendar event per the new mechanism. Audit line: reuse `action_type: calendar_create`.
    - **Routed to decision-blocked / needs-decomposition:** handle per the normal Step 5 rules for that category (surface the blocking decision, or schedule only the "define first sub-task" block).
    - In every case, put `"confront-driven"` + the item + the decision in that audit line's `notes` field. Do NOT invent a new `action_type` — reuse the existing ones above.
+
+7. **Carry-forward-driven actions:** Carry-forward (Step 7) never acts on its own — it only proposed at the gate (Step 9). If Sridhar approved a carry-forward proposal:
+   - **Reschedule:** create the calendar event as normal. Audit line: reuse `action_type: calendar_create`, note `"carry-forward"` in `notes`.
+   - **Drop:** append a brain.md Pattern Log row recording the deliberate drop + date + reason (if given), so it doesn't nag forever. Audit line: reuse `action_type: brain_update`, note `"carry-forward drop"` + reason in `notes`.
+   - **Deferred to Confront:** if the item also hit the Confront threshold, it's fully handled under Confront-driven actions above — do not double-log it here.
+   - Do NOT invent a new `action_type` — reuse the existing ones above.
 
 ## Audit log format (append one JSON line per action to AUDIT)
 
@@ -232,12 +302,12 @@ Match `docs/audit-schema.md`. Each line:
 {"timestamp":"<ISO8601 +08:00>","action_type":"calendar_create|brain_update|inbox_archive|completion_log","trust_tier":"supervised","trigger":"manual_prompt","input_summary":"<short>","output_summary":"<short>","outcome":"success","ambiguity_flag":<true|false>,"reversed_at":null,"notes":""}
 ```
 
-- `trust_tier` is always `supervised` for /plan-my-day (Sridhar approved every action in Step 9).
+- `trust_tier` is always `supervised` for /plan-my-day (Sridhar approved every action in Step 10).
 - `trigger` is `manual_prompt`.
 - `ambiguity_flag` is `true` for any action that came from an entry Sridhar had to disambiguate in Step 4 (completion reconciliation) or Step 5 (classification).
 - Use the real timestamp from `date`, Asia/Singapore offset.
 - Append lines; never rewrite audit.jsonl.
 
-## STEP 10 — Confirm
+## STEP 11 — Confirm
 
 Summarise what was written: N calendar events created, M brain.md rows added, K entries archived, and confirm audit lines were logged. Keep it short.
